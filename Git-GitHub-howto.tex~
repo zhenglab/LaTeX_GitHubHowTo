@@ -17,7 +17,7 @@
 
 \maketitle
 \tableofcontents
-\newpage
+
 \section{通过SSH代理使用GitHub}
 由于实验室需要，必须通过实验室代理来实现GitHub与本地仓库的连接。通过设置SSH代理可以实现这一需求，从而完成从本地仓库上传材料到GitHub及从GitHub克隆仓库到本地等操作。
 
