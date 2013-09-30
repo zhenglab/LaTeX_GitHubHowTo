@@ -230,6 +230,13 @@ git show v1.0:./
 
 这种本地仓库与远程仓库的冲突一般是在合并同一个文件的同一部分时，其内容不同造成的。合并同一文件的不同部分或者合并不同文件时，不会产生冲突，此时使用\lstinline|git pull|命令，就可以把GitHub上新更新的内容自动的拉取和合并到本地仓库中。
 
+另外，若用\lstinline|git pull|时出现图\ref{fig:9}情况，可使用\lstinline|git pull --no-edit|命令来代替\lstinline|git pull|。\lstinline|git help pull|命令可以查看具体手册。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{pull-error1.png}
+\caption{pull problem}\label{fig:9}
+\end{figure}
 \section{实验室中Git和GitHub的使用}
 
 学会上面的用法后，下面就从实验室的使用情况来做简单介绍。
