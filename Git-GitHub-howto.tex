@@ -200,6 +200,36 @@ git show v1.0:./
 \end{plaintext}
 这样，所有的Git项目中除了\verb|.gitignore|文件之外的其他隐藏文件和以$\sim$结尾的文件在提交到GitHub上时都会被忽略。
 
+\subsection{本地仓库与远程仓库的冲突合并}
+
+有时候我们在用\lstinline|git commit|命令在本地提交之后，想要用\lstinline|git push|提交到远程仓库上时，会发现无法推送的问题\ref{fig:6}。这是因为远程仓库上的版本不是本地版本的上一版本。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{push-error.png}
+\caption{push error}\label{fig:6}
+\end{figure}
+
+此时，根据提示，应该用\lstinline|git pull|在终端执行一下，然后会看到提示\ref{fig:7}。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{pull-error.png}
+\caption{pull error}\label{fig:7}
+\end{figure}
+
+比如说，当前本地仓库有个名为\verb|hello|的文件，里面的内容是hello kitty，hello kitty的前一版本的内容是hello。远程仓库的hello文件的内容是hello world。此时要把本地仓库的\verb|hello|文件提交到远程仓库，即执行\lstinline|git push|和\lstinline|git pull|时就会出现以上错误。此时打开本地仓库中的\verb|hello|文件，可以看到内容如图\ref{fig:8}。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{conflict.png}
+\caption{conflict}\label{fig:8}
+\end{figure}
+
+其中=====隔开的上半部分是本地仓库中的内容，下半部分是远程仓库上的内容。解决冲突的办法是二者选其一或者整合到一起（====等符号及解释都应该删除）。修改完之后，再进行\lstinline|git add|，\lstinline|git commit|以及\lstinline|git push|就没有问题了。
+
+这种本地仓库与远程仓库的冲突一般是在合并同一个文件的同一部分时，其内容不同造成的。合并同一文件的不同部分或者合并不同文件时，不会产生冲突，此时使用\lstinline|git pull|命令，就可以把GitHub上新更新的内容自动的拉取和合并到本地仓库中。
+
 \section{实验室中Git和GitHub的使用}
 
 学会上面的用法后，下面就从实验室的使用情况来做简单介绍。
