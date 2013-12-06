@@ -4,7 +4,7 @@
 
 % packages
 \usepackage{listings} %在矩形框中显示代码 
-\usepackage[framed,numbered,useliterate]{styles/mcode} %显示Matlab代码
+%\usepackage[framed,numbered,useliterate]{styles/mcode} %显示Matlab代码
 
 % http://stackoverflow.com/questions/2993630/use-latex-listings-to-correctly-detect-and-syntax-highlight-embedded-code-of-a-d
 % settings
@@ -43,8 +43,6 @@
     basicstyle=\ttfamily\footnotesize,
     otherkeywords={=, +, [, ], (, ), \{, \}, *},
     literate={~}{$\sim$}{1},
-    backgroundcolor=\color{yellow},
-    frame=single,
     % bash commands from:
     %http://www.math.montana.edu/Rweb/Rhelp/00Index.html
     emph={addgroup,adduser,alias,

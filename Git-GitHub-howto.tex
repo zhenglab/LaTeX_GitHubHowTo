@@ -131,7 +131,7 @@ git config --global user.email "your email here"
 
 \subsection{提交文件}
 
-使用\lstinline|git commit -m 'message'|命令可以把暂存区的文件提交，此时历史记录里就有此时的文件状态。每次提交实际上就是对项目做了一次快照。message是对这一次的提交给出说明。.git里的\verb|COMMIT-EDITMSG|文件，就是每次提交时的说明。若是不小心写错了说明，也可修改这个文件的内容，或是用\lstinline|git commit --amend|来修改。
+使用\lstinline|git commit -m 'message'|命令可以把暂存区的文件提交，此时历史记录里就有此时的文件状态。每次提交实际上就是对项目做了一次快照。message是对这一次的提交给出说明。.git里的\verb|COMMIT-EDITMSG|文件，是最后一次提交时的说明。
 
 可以通过\lstinline|git commit -a -m 'message'|来跳过暂存，直接提交。
 
@@ -144,20 +144,41 @@ git config --global user.email "your email here"
 \subsection{恢复历史版本}
 \subsubsection{恢复项目的历史版本}
 
-在进行一个项目时，有时会发现你项目后几次所做的修改完全是错误的，你若想回到之前某个版本，Git也可以帮你做到。
+在进行一个项目时，有时会发现你项目中后几次所做的修改完全是错误的，若想重置到之前某个版本，也就是说删除历史记录中某个版本之后的所有的版本的记录，Git也可以帮你做到。
 
 首先，你可以使用\lstinline|git log|命令查看你想要恢复的版本的哈希值（hash）。Git使用SHA-1算法计算数据的校验和，通过对文件的内容或目录的结构计算出一个SHA-1哈希值，作为指纹字符串。该字串由$40$个十六进制字符（$0-9$及a-f）组成，看起来像是：f829d445fa8fdec258e58c61f730bd769e31bdbd。
 
-然后就可以用\lstinline|git reset|命令来恢复你选中的版本，\lstinline|git reset|命令有很多的参数选项，下面就简单的介绍其中两个，其余的可以用\lstinline|git help reset|命令查看。
+然后就可以用\lstinline|git reset|命令来恢复到你选中的版本，\lstinline|git reset|命令有很多的参数选项，下面就简单的介绍其中两个，其它选项可以用\lstinline|git help reset|命令查看。
 
 \begin{description}
-\item[hard] 选用hard选项来恢复某个版本，会删掉这个版本之后所做的所有的提交，此时查看历史记录（\lstinline|git log|）你会发现，记录中只是记载了这个版本之前的修改。若想回到这个版本，则可在hard之后加上这个版本的哈希值（hash），即\lstinline|git reset --hard hash|。此时查看项目中的文件会发现它们已经回到了那个版本的状态。
-\item[soft] 选用soft选项来恢复某个版本，历史记录中仍是删除了这个版本之后的版本，但是项目中的文件并没有做相应的更改，仍是现在的状态，所以，若是误删了现在的版本，仍可以重新进行提交来找回。
+\item[hard] 选用hard选项来恢复某个版本，会删掉这个版本之后所做的所有的提交，此时项目中的文件也回到了这个版本的状态。查看历史记录（\lstinline|git log|）你会发现，记录中只是记载了这个版本之前的修改。具体做法是，用\lstinline|git log|命令查看想要恢复的版本的哈希值（hash），然后用\lstinline|git reset --hard hash|命令恢复。此时这个版本之后的所有的提交都会被删除。
+\item[soft] 选用soft选项来恢复某个版本，删除了历史记录中的这个版本之后的所有版本，但是项目中的最新版本的文件并没有做相应的更改，仍是现在的状态。也就是说，用soft选项后的结果虽然删除了指定版本之后的所有的版本的历史记录，但是，因为项目中保留了最新的版本，所以若是出现了误删，仍可以重新用\lstinline|git add|和\lstinline|git commit|命令重新提交，从而把最新版本加入到提交记录中。
 \end{description}
+
+注意，若是在本地恢复了项目了历史版本，也就是说删除了一些历史记录后，若想更新到远程GitHub上，必须使用\lstinline|git push -f origin master|命令（如果远程GitHub中包含你所删除的记录）。f参数是强制执行的意思。因为若不强制执行，就会提示让用\lstinline|git pull|命令把远程项目合并到本地来，这时就会把删掉的记录又重新合并到本地项目的历史记录中，造成记录的混乱。
 
 \subsubsection{恢复单个文件的历史版本}
 
 上面讲到的是恢复整个项目的某个版本，若是想恢复其中某个文件的版本，可以用\lstinline|git log filename|来查看想回到版本的哈希值，然后用\lstinline|git reset --hard hash|来恢复。
+
+\subsection{修改提交说明}
+
+修改最新提交的说明比较简单，只需一条命令即可：\lstinline|git commit --amend|，此时你就可以修改\#号之上的说明，并用Ctrl+X和Y键进行保存。 
+
+若是想修改历史记录中的提交说明，例如，倒数第三次提交说明，则需要几个步骤：
+\begin{enumerate}
+\item 输入\lstinline|git rebase -i HEAD~2|命令，这句话的意思是衍合到倒数第二次提交，关于衍合的详细解释，可以用\lstinline|git help rebase|查看。此时，你会看到如图\ref{fig:10}的界面。把第一行中的pick改为edit，然后保存，退出(Ctrl+X键和Y键)。注意，此时的这个列表与用\lstinline|git log|查看历史记录时的列表顺序正好相反，所以修改时要注意。
+\item 输入\lstinline|git commit --amend|命令，此时就可以修改提交说明，修改后保存。
+\item 输入\lstinline|git rebase --continue|命令，完成修改，此时查看历史记录会发现提交说明已经修改成功。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{edit.png}
+\caption{}\label{fig:10}
+\end{figure}
+\end{enumerate}
+
+跟上面提到的恢复历史版本一样，修改以后若想提交到远程GitHub上，而GitHub中包含修改之前的版本时，必须使用\lstinline|git push -f origin master|命令。
 
 \subsection{打标签及查看某个版本的文件}
 Git可以对某一时间点上的版本打上标签。若是你觉得当前的版本相对较为成熟，你可以给当前版本打上标签，方便以后查看这个版本。
@@ -200,6 +221,43 @@ git show v1.0:./
 \end{plaintext}
 这样，所有的Git项目中除了\verb|.gitignore|文件之外的其他隐藏文件和以$\sim$结尾的文件在提交到GitHub上时都会被忽略。
 
+\subsection{本地仓库与远程仓库的冲突合并}
+
+有时候我们在用\lstinline|git commit|命令在本地提交之后，想要用\lstinline|git push|提交到远程仓库上时，会发现无法推送的问题\ref{fig:6}。这是因为远程仓库上的版本不是本地版本的上一版本。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{push-error.png}
+\caption{push error}\label{fig:6}
+\end{figure}
+
+此时，根据提示，应该用\lstinline|git pull|在终端执行一下，然后会看到提示\ref{fig:7}。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{pull-error.png}
+\caption{pull error}\label{fig:7}
+\end{figure}
+
+比如说，当前本地仓库有个名为\verb|hello|的文件，里面的内容是hello kitty，hello kitty的前一版本的内容是hello。远程仓库的hello文件的内容是hello world。此时要把本地仓库的\verb|hello|文件提交到远程仓库，即执行\lstinline|git push|和\lstinline|git pull|时就会出现以上错误。此时打开本地仓库中的\verb|hello|文件，可以看到内容如图\ref{fig:8}。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{conflict.png}
+\caption{conflict}\label{fig:8}
+\end{figure}
+
+其中=====隔开的上半部分是本地仓库中的内容，下半部分是远程仓库上的内容。解决冲突的办法是二者选其一或者整合到一起（====等符号及解释都应该删除）。修改完之后，再进行\lstinline|git add|，\lstinline|git commit|以及\lstinline|git push|就没有问题了。
+
+这种本地仓库与远程仓库的冲突一般是在合并同一个文件的同一部分时，其内容不同造成的。合并同一文件的不同部分或者合并不同文件时，不会产生冲突，此时使用\lstinline|git pull|命令，就可以把GitHub上新更新的内容自动的拉取和合并到本地仓库中。
+
+另外，若用\lstinline|git pull|时出现图\ref{fig:9}情况，可以按Ctrl+X键和Y键保存这个合并信息。
+
+\begin{figure}[!htb] %插图
+\centering
+\includegraphics[width=0.9\textwidth]{pull-error1.png}
+\caption{pull problem}\label{fig:9}
+\end{figure}
 \section{实验室中Git和GitHub的使用}
 
 学会上面的用法后，下面就从实验室的使用情况来做简单介绍。
