@@ -180,7 +180,10 @@ git config --global user.email "your email here"
 
 跟上面提到的恢复历史版本一样，修改以后若想提交到远程GitHub上，而GitHub中包含修改之前的版本时，必须使用\lstinline|git push -f origin master|命令。
 
-\subsection{打标签及查看某个版本的文件}
+\subsection{查看某个历史版本的文件}
+Git可以通过打标签的方式查看历史版本的文件，也可以不用打标签。
+\begin{description}
+\item [打标签]
 Git可以对某一时间点上的版本打上标签。若是你觉得当前的版本相对较为成熟，你可以给当前版本打上标签，方便以后查看这个版本。
 
 比如，我们提交了某个项目中的所有文件，然后我们新建标签：
@@ -192,6 +195,12 @@ git tag -a v1.0 -m 'message'
 git show v1.0:./
 \end{bash}
 冒号后为项目的路径，./是当前路径的意思，若是想查看这个项目中的某个文件的内容，可以在/后加上文件名。
+\item[不打标签]
+若想直接查看某个文件的历史版本，Git也可以做到。首先应通过\lstinline|git log|指令找到你想查看的版本的哈希值，比如说： d26673579fa5a8a328a7e36336724548cd7b210f。然后就可以用以下指令来查看了，当然，filename要改成你想查看的文件的文件名。
+\begin{bash}
+git show :d26673579fa5a8a328a7e36336724548cd7b210f:./filename
+\end{bash}
+\end{description}
 \subsection{忽略文件}
 
 有时编译时产生一些中间文件，如果不想跟踪这些文件，也可以进行设置\cite{5:misc}。在新建一个项目时，养成一个写忽略文件的好习惯，可以有助于减少以后的麻烦，使Git管理更出色。
