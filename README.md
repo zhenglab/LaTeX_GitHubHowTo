@@ -1,4 +1,4 @@
-LaTeX_Git-GitHub-howto
+LaTeX_GitHubHowTo
 ======================
 
-Howto use Git/GitHub and ssh proxy/tunnel at zhenglab.
+How to use Git/GitHub and ssh proxy/tunnel at zhenglab.
